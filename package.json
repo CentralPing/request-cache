@@ -1,0 +1,38 @@
+{
+  "name": "request-cache",
+  "version": "0.1.0",
+  "description": "Simple caching using Redis for request.",
+  "main": "index.js",
+  "dependencies": {
+    "lodash-node": "^3.5.0",
+    "request": "^2.54.0"
+  },
+  "devDependencies": {
+    "faker": "^2.1.2",
+    "gulp": "^3.8.11",
+    "gulp-debug": "^2.0.1",
+    "gulp-if": "^1.2.5",
+    "gulp-jasmine": "^2.0.0",
+    "gulp-jshint": "^1.9.2",
+    "gulp-todo": "^2.5.0",
+    "yargs": "^3.5.3"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CentralPing/request-cache"
+  },
+  "keywords": [
+    "mongoose",
+    "plugin",
+    "document creation"
+  ],
+  "author": "Jason Cust <jason@centralping.com>",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/CentralPing/request-cache/issues"
+  },
+  "homepage": "https://github.com/CentralPing/request-cache"
+}
