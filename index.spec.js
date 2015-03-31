@@ -59,7 +59,7 @@ describe('With request-cache', function () {
 
     it('should return a hash immediately', function (done) {
       redis.get.and.callFake(function (key, cb) {
-        cb(null);
+        process.nextTick(function() { cb(null); });
       });
       next.and.callFake(function (err, resp, body) {
         expect(hashKey).toBeDefined();
@@ -71,7 +71,7 @@ describe('With request-cache', function () {
 
     it('should use the hashKey for lookup', function (done) {
       redis.get.and.callFake(function (key, cb) {
-        cb(null);
+        process.nextTick(function() { cb(null); });
       });
       next.and.callFake(function (err, resp, body) {
         expect(err).not.toBe(null);
@@ -90,7 +90,7 @@ describe('With request-cache', function () {
     describe('with cache lookup', function () {
       it('should populate error on callback if lookup fails', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(new Error('Error Message'));
+          process.nextTick(function() { cb(new Error('Error Message')); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(err).not.toBe(null);
@@ -108,7 +108,7 @@ describe('With request-cache', function () {
 
       it('should return parsed cache object if lookup matches', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null, '[{},"body"]');
+          process.nextTick(function() { cb(null, '[{},"body"]'); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(err).toBe(null);
@@ -128,7 +128,7 @@ describe('With request-cache', function () {
 
       it('should return error without caching', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(err).not.toBe(null);
@@ -146,7 +146,7 @@ describe('With request-cache', function () {
 
       it('should use the hashKey for setting and expiring cache', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(err).toBe(null);
@@ -171,7 +171,7 @@ describe('With request-cache', function () {
 
       it('should generate the same hashKey for retreiving cache with the same URL', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
@@ -182,7 +182,7 @@ describe('With request-cache', function () {
 
       it('should generate the same hashKey for retreiving cache with the same URL as a param (URL)', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
@@ -193,7 +193,7 @@ describe('With request-cache', function () {
 
       it('should generate the same hashKey for retreiving cache with the same URL as a param (URI)', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
@@ -204,7 +204,7 @@ describe('With request-cache', function () {
 
       it('should generate a new hashKey for retreiving cache with a different URL', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
@@ -215,7 +215,7 @@ describe('With request-cache', function () {
 
       it('should generate the same hashKey for retreiving cache with same URL and query params', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
@@ -226,7 +226,7 @@ describe('With request-cache', function () {
 
       it('should parse the cached value without initiating a new request', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null, cacheObj.value);
+          process.nextTick(function() { cb(null, cacheObj.value); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(err).toBe(null);
@@ -265,7 +265,7 @@ describe('With request-cache', function () {
 
       it('should use the hashKey for setting and expiring cache', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(err).toBe(null);
@@ -290,7 +290,7 @@ describe('With request-cache', function () {
 
       it('should generate the same hashKey for retreiving cache with the same URL and key param values', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
@@ -301,7 +301,7 @@ describe('With request-cache', function () {
 
       it('should generate the same hashKey for retreiving cache with the same URL and key param values with extra param values', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
@@ -312,7 +312,7 @@ describe('With request-cache', function () {
 
       it('should generate a new hashKey for retreiving cache with the same URL and different key param values', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
@@ -323,13 +323,51 @@ describe('With request-cache', function () {
 
       it('should generate a new hashKey for retreiving cache with the same URL and subset of key param values', function (done) {
         redis.get.and.callFake(function (key, cb) {
-          cb(null);
+          process.nextTick(function() { cb(null); });
         });
         next.and.callFake(function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
           done();
         });
         var hashKey = cache({url: 'http://www.google.com', qs: {q: 'hello'}}, next);
+      });
+
+      it('should refresh the expiration with `refresh` set to a positive value', function (done) {
+        cache = reqCache(redis, {refresh: 10});
+        redis.get.and.callFake(function (key, cb) {
+          process.nextTick(function() { cb(null, cacheObj.value); });
+        });
+        next.and.callFake(function (err, resp, body) {
+          expect(err).toBe(null);
+          expect(resp.statusCode).toBe(cacheObj.resp.statusCode);
+          expect(body).toEqual(cacheObj.body);
+          expect(redis.set).not.toHaveBeenCalled();
+          expect(redis.expire).toHaveBeenCalled();
+          expect(redis.expire.calls.argsFor(0)[0]).toBe(hashKey);
+          expect(redis.expire.calls.argsFor(0)[1]).toEqual(10);
+          done();
+        });
+
+        var hashKey = cache('http://www.google.com', next);
+      });
+
+      it('should not set the expiration with `ttl` set to `0`', function (done) {
+        cache = reqCache(redis, {ttl: 0});
+        redis.get.and.callFake(function (key, cb) {
+          process.nextTick(function() { cb(null); });
+        });
+        next.and.callFake(function (err, resp, body) {
+          expect(err).toBe(null);
+          expect(resp).toBeDefined();
+          expect(body).toBeDefined();
+          expect(redis.set).toHaveBeenCalled();
+          expect(redis.set.calls.argsFor(0)[0]).toBe(hashKey);
+          expect(redis.set.calls.argsFor(0)[1]).toEqual(jasmine.any(String));
+          expect(redis.expire).not.toHaveBeenCalled();
+          done();
+        });
+
+        var hashKey = cache('http://www.google.com', next);
       });
     });
   });

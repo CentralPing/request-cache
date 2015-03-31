@@ -1,6 +1,6 @@
 {
   "name": "request-cache",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple caching using Redis for request.",
   "main": "index.js",
   "dependencies": {
@@ -25,9 +25,9 @@
     "url": "https://github.com/CentralPing/request-cache"
   },
   "keywords": [
-    "mongoose",
-    "plugin",
-    "document creation"
+    "request",
+    "redis",
+    "cache"
   ],
   "author": "Jason Cust <jason@centralping.com>",
   "license": "Apache 2.0",

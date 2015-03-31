@@ -5,6 +5,7 @@ var _ = require('lodash-node/modern');
 module.exports = function requestCacheInitialization(redisClient, options) {
   options = _.assign({
     hashType: 'md5',
+    refresh: 0, // seconds
     ttl: 3600, // seconds
     queryCacheKeys: []
   }, options || {});
@@ -52,7 +53,10 @@ module.exports = function requestCacheInitialization(redisClient, options) {
       if (err) { return next(err); }
 
       if (obj) {
-        // API cache proxy redis responded
+        // refresh expiration
+        if (options.refresh) { redisClient.expire(key, options.refresh); }
+
+        // reconstitute resp object and body
         return next.apply(null, [null].concat(JSON.parse(obj)));
       }
 
@@ -61,7 +65,8 @@ module.exports = function requestCacheInitialization(redisClient, options) {
         if (err === null) {
           // Cache in redis
           redisClient.set(key, JSON.stringify([resp, body]));
-          redisClient.expire(key, options.ttl);
+
+          if (options.ttl) { redisClient.expire(key, options.ttl); }
         }
 
         return next(err, resp, body);
