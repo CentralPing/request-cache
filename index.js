@@ -7,7 +7,8 @@ module.exports = function requestCacheInitialization(redisClient, options) {
     hashType: 'md5',
     refresh: 0, // seconds
     ttl: 3600, // seconds
-    queryCacheKeys: []
+    queryCacheKeys: [],
+    keyPrefix: undefined
   }, options || {});
 
   // requestCache(reqObj[, key], next);
@@ -46,7 +47,7 @@ module.exports = function requestCacheInitialization(redisClient, options) {
         }, ''));
       }
 
-      key = hash.digest('hex');
+      key = (options.keyPrefix || '') + hash.digest('hex');
     }
 
     redisClient.get(key, function fetchObj(err, obj) {

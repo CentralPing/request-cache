@@ -369,6 +369,19 @@ describe('With request-cache', function () {
 
         var hashKey = cache('http://www.google.com', next);
       });
+
+      it('should prefix the generated hashKey with `keyPrefix` set', function (done) {
+        cache = reqCache(redis, {keyPrefix: 'FOO'});
+        redis.get.and.callFake(function (key, cb) {
+          process.nextTick(function() { cb(null); });
+        });
+        next.and.callFake(function (err, resp, body) {
+          expect(hashKey).toBeDefined();
+          expect(hashKey).toEqual(jasmine.stringMatching(/^FOO/));
+          done();
+        });
+        var hashKey = cache('http://localhost', next);
+      });
     });
   });
 });
