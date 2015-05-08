@@ -1,3 +1,6 @@
+'use strict';
+/* jshint node: true, jasmine: true */
+
 var reqCache = require('./');
 
 describe('With request-cache', function () {
