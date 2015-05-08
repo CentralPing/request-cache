@@ -52,7 +52,7 @@ gulp.task('test', ['lint'], function () {
   return testRunner(cliSrc || config.paths.specs);
 });
 
-gulp.task('watch', ['test'], function (done) {
+gulp.task('watch', ['test'], function () {
   // Check to ensure both the specified specs
   // and corresponding scripts are watched
   var glob = cliSrc ?
