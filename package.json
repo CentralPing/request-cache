@@ -14,7 +14,7 @@
     "gulp-debug": "^2.0.1",
     "gulp-if": "^1.2.5",
     "gulp-jasmine": "^2.0.0",
-    "gulp-jsdoc-to-markdown": "^1.1.0",
+    "gulp-jsdoc-to-markdown": "^1.1.1",
     "gulp-jshint": "^1.9.2",
     "gulp-todo": "^2.5.0",
     "gulp-util": "^3.0.4",
@@ -30,6 +30,8 @@
   "keywords": [
     "request",
     "redis",
+    "node_redis",
+    "ioredis",
     "cache"
   ],
   "author": "Jason Cust <jason@centralping.com>",
