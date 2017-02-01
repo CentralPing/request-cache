@@ -1,6 +1,8 @@
 request-cache
 ====================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/CentralPing/request-cache.svg)](https://greenkeeper.io/)
+
 [ ![Codeship Status for CentralPing/request-cache](https://codeship.com/projects/f8e35830-b7ae-0132-1e43-1e8b2f627676/status)](https://codeship.com/projects/71302)
 [ ![Code Climate for CentralPing/request-cache](https://codeclimate.com/github/CentralPing/request-cache/badges/gpa.svg)](https://codeclimate.com/github/CentralPing/request-cache)
 [ ![Dependency Status for CentralPing/request-cache](https://david-dm.org/CentralPing/request-cache.svg)](https://david-dm.org/CentralPing/request-cache)
