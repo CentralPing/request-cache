@@ -8,17 +8,17 @@
     "request": "^2.54.0"
   },
   "devDependencies": {
-    "faker": "^2.1.2",
+    "faker": "^3.1.0",
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
-    "gulp-debug": "^2.0.1",
-    "gulp-if": "^1.2.5",
+    "gulp-debug": "^3.0.0",
+    "gulp-if": "^2.0.2",
     "gulp-jasmine": "^2.0.0",
     "gulp-jsdoc-to-markdown": "^1.1.1",
-    "gulp-jshint": "^1.9.2",
-    "gulp-todo": "^2.5.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-todo": "^5.3.0",
     "gulp-util": "^3.0.4",
-    "yargs": "^3.5.3"
+    "yargs": "^6.6.0"
   },
   "scripts": {
     "test": "gulp test"
