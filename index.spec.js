@@ -136,7 +136,7 @@ describe('With request-cache', function () {
         next.and.callFake(function (err, resp, body) {
           expect(err).not.toBe(null);
           expect(err.name).toBe('Error');
-          expect(err.message).toBe('connect ECONNREFUSED');
+          expect(err.message).toBe('connect ECONNREFUSED 127.0.0.1:80');
           expect(resp).not.toBeDefined();
           expect(body).not.toBeDefined();
           expect(redis.get).toHaveBeenCalled();
