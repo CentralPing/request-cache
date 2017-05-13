@@ -3,7 +3,7 @@
 
 var crypto = require('crypto');
 var request = require('request');
-var _ = require('lodash-node/modern');
+var _ = require('lodash');
 
 /**
  * @module request-cache
