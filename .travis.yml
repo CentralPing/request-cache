@@ -1,0 +1,49 @@
+language: node_js
+node_js:
+- '7'
+- '6'
+- '6.10'
+- '6.9'
+- '6.8'
+- '6.7'
+- '6.6'
+- '6.5'
+- '6.4'
+- '6.3'
+- '6.2'
+- '6.1'
+- '6.0'
+- '5'
+- '4'
+- '4.8'
+- '4.7'
+- '4.6'
+- '4.5'
+- '4.4'
+- '4.3'
+- '4.2'
+- '4.1'
+- '4.0'
+services:
+env:
+- CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+  code_climate:
+    repo_token: 3354755dab243c8497faa7f8ac90182ff32c4cc787892140b8a1b6642cb5890f
+notifications:
+  email: false
+  slack:
+    secure: oVmJm2b0bdJw6sQeSx/pa2TkOBZ7oXCdBo3MVWgouOCKMSsj39NqZ3LC8GzXWCPcNtvZ9jPFPnyi4dX9pz7Subuu92/9WXz6DcyhdMciSUkHqukCkLrikW5AiRnG30V3+af+8r/QyR15AsSdySjnrNRf5efM21ate/SfnLK9CQY0w6iDOAjxo+kmsw0F44QpR99JEc1zYo6KOtUt5FH9v+/mRf1rfiIvY7dVoVbAN8lgIrDu5tzTkWi6m/B0XU6TKcG5SMivqWNKvv8Cv5NQmitn8QdOraDqCYKNVwzsC8as2fmIy8GYEzbBGU5DNi5OA57ww06q8mV9wmbnOyZNRYvVl4fj73ddbp4zNldBYplBBYR1h9t4mgYP5os0f/y46DVoBS5xeyCt0+UEnqAFb1jxS4G3FkrDmkR5Oyn4JisrJ5dPE23F7nwFZVd1xS/LZgl0FkGbF+a99wpvhxm5apu9HntFRVc/kF164B5WwGHiFwPNXoUBjZDGi0BNGuROLd8ID5n1o+GdZQDkU3ChxlG0KY3w6+8JRPevp2BRAkzPGgha3IZC6PRV9Z9+zNhkXg2RXBhkvFSvKl1rjnWtyeWKsBkc1ZLwSc7n0KICbQ8Lpd5FWDyj6B+qDHUiQozAeZbpXA/TMoga11rNpGig4+BEeG5dCk4KIVz5530WtUQ=
+deploy:
+  provider: npm
+  email: jason@centralping.com
+  api_key:
+    secure: pYZGLtJjWKvSiE+L2l9PyG8Mo2c2zXpdshyS4A8xBbn3pvMpURom2gWrepz+27p6TzazLb6B4iltjbe0OIo0uYTCfrFItOCw+p4XPmODcXBXesoR4Ce21qsRYEyHznElLeqVcA/dJQEn1hwfq3ioj6RVzUDNv9uU0P4+XMhBX4Cgsn8o1n5HkSSjIi4r2L/tBVSWSEymi6z5f5Bc+1QFEzilQTwcJNmC+xaqETetZ+PDE1+lUQQc4c7uNFlsp/yASLbN3KfQl4022u3xnzfVZizvVIWYKG5r21GvTil7F8YvC9nOmRFup6Ic3cnnIy0YqZ17ohWyNTRYwny+cjO/Wjey6uQFkfqXxs6E8TbWPtRlzf1m6XYNxFMkWnpr5SCMYfFMhT49vpf54hByz1evJAS4LpXRccJduMjxVnH+nyFwiisis/RpbOTuD+vbpRs6Te6a6gJO41xipEAtBgYrE2xPPKC6HYizYRdUwTkjBCgQrxdhvNFjs0fpdJ8RO6lJgG+N2y6dhqwytq+7yDPjLpVjd9dOMjyhbMzTUqIeKVPq3O/+4+j3vnJmyGFvS4n4BnhOgHW8dMevaGw4n/4Pw5mOMNZR0tHHZQluXumO6Y/VT4jXIsaimFIj1xH3LeDjBMUmfhegV50dFGZIoW0QxQaOlhwwEd0l5Mo0a07wveU=
+  on:
+    tags: true
+    repo: CentralPing/request-cache
