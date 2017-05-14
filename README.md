@@ -56,20 +56,20 @@ setInterval(function () {
 
 ### With Basic Requests
 ```js
-var requestCache = require('request-cache');
-var rCache = requestCache(REDIS_CLIENT);
+const requestCache = require('request-cache');
+const rCache = requestCache(REDIS_CLIENT);
 
-var cacheKey = rCache('http://www.somethingawesome.com', function (err, resp, body) {
+const cacheKey = rCache('http://www.somethingawesome.com', function (err, resp, body) {
   // Do something with the awesomeness
 });
 ```
 
 ### With Request Object
 ```js
-var requestCache = require('request-cache');
-var rCache = requestCache(REDIS_CLIENT);
+const requestCache = require('request-cache');
+const rCache = requestCache(REDIS_CLIENT);
 
-var cacheKey = rCache({
+const cacheKey = rCache({
   url:'http://www.somethingawesome.com',
 }, function (err, resp, body) {
   // Do something with the awesomeness
@@ -78,12 +78,12 @@ var cacheKey = rCache({
 
 ### With Cache Key Options
 ```js
-var requestCache = require('request-cache');
-var rCache = requestCache(REDIS_CLIENT, {
+const requestCache = require('request-cache');
+const rCache = requestCache(REDIS_CLIENT, {
   queryCacheKeys: ['foo']
 });
 
-var cacheKey = rCache({
+const cacheKey = rCache({
   url:'http://www.somethingawesome.com',
   qs: {
     foo: 'bar', // value used in cache key generation
