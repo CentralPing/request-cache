@@ -1,24 +1,24 @@
 'use strict';
-/* jshint node: true */
 
-var fs = require('fs');
-var args = require('yargs').argv;
-var gulp = require('gulp');
-var gulpIf = require('gulp-if');
-var debug = require('gulp-debug');
-var jshint = require('gulp-jshint');
-var todo = require('gulp-todo');
-var jasmine = require('gulp-jasmine');
-var gutil = require('gulp-util');
-var concat = require('gulp-concat');
-var jsdoc2md = require('gulp-jsdoc-to-markdown');
+const fs = require('fs');
+const _ = require('lodash');
+const args = require('yargs').argv;
+const gulp = require('gulp');
+const gulpIf = require('gulp-if');
+const gulpDebug = require('gulp-debug');
+const gulpJshint = require('gulp-jshint');
+const gulpTodo = require('gulp-todo');
+const gulpJasmine = require('gulp-jasmine');
+const gulpUtil = require('gulp-util');
+const gulpConcat = require('gulp-concat');
+const gulpJsdoc2md = require('gulp-jsdoc-to-markdown');
 
-var isDebug = !!args.debug;
-var isVerbose = !!args.verbose;
-var isStackTrace = !!args.stackTrace;
-var cliSrc = args.files;
+const isDebug = !!args.debug;
+const isVerbose = !!args.verbose;
+const isStackTrace = !!args.stackTrace;
+const cliSrc = args.files;
 
-var config = {
+const config = {
   paths: {
     scripts: ['./**/*.js', '!./**/*.spec.js', '!./node_modules/**/*.js'],
     specs: ['./**/*.spec.js', '!./node_modules/**/*.js'],
@@ -33,9 +33,9 @@ gulp.task('default', function () {
 gulp.task('lint', function () {
   // Check for `test` to ensure both the specified specs
   // and corresponding scripts are linted
-  var glob = cliSrc ?
-    cliSrc.replace(/\.spec\.js$/, '?(.spec).js') :
-    config.paths.all;
+  const glob = _.isEmpty(cliSrc) ?
+    config.paths.all :
+    cliSrc.replace(/\.spec\.js$/, '?(.spec).js');
 
   return lint(glob);
 });
@@ -55,19 +55,19 @@ gulp.task('test', ['lint'], function () {
 gulp.task('watch', ['test'], function () {
   // Check to ensure both the specified specs
   // and corresponding scripts are watched
-  var glob = cliSrc ?
-    cliSrc.replace(/\.spec\.js$/, '?(.spec).js') :
-    config.paths.all;
+  const glob = _.isEmpty(cliSrc) ?
+    config.paths.all :
+    cliSrc.replace(/\.spec\.js$/, '?(.spec).js');
 
   return gulp.watch(glob, ['test']);
 });
 
 gulp.task('todo', function () {
   return gulp.src(config.paths.all)
-    .pipe(todo({
+    .pipe(gulpTodo({
       //fileName: 'todo.md',
       verbose: isVerbose,
-      //newLine: gutil.linefeed,
+      //newLine: gulpUtil.linefeed,
       /*
       transformComment: function (file, line, text) {
           return ['| ' + file + ' | ' + line + ' | ' + text];
@@ -85,10 +85,10 @@ gulp.task('todo', function () {
 
 gulp.task('docs', function() {
   return gulp.src(config.paths.all)
-    .pipe(concat('README.md'))
-    .pipe(jsdoc2md({template: fs.readFileSync('./readme.hbs', 'utf8')}))
+    .pipe(gulpConcat('README.md'))
+    .pipe(gulpJsdoc2md({template: fs.readFileSync('./readme.hbs', 'utf8')}))
     .on('error', function(err){
-      gutil.log('jsdoc2md failed:', err.message);
+      gulpUtil.log('jsdoc2md failed:', err.message);
     })
     .pipe(gulp.dest('.'));
 });
@@ -99,8 +99,8 @@ function testRunner(src) {
   }
 
   return gulp.src(src)
-    .pipe(gulpIf(isDebug, debug({title: 'test:'})))
-    .pipe(jasmine({
+    .pipe(gulpIf(isDebug, gulpDebug({title: 'test:'})))
+    .pipe(gulpJasmine({
       verbose: isVerbose,
       includeStackTrace: isStackTrace
     }));
@@ -108,8 +108,8 @@ function testRunner(src) {
 
 function lint(src) {
   return gulp.src(src)
-    .pipe(gulpIf(isDebug, debug({title: 'lint:'})))
-    .pipe(jshint())
-    .pipe(jshint.reporter('default', {verbose: isVerbose}))
-    .pipe(jshint.reporter('fail'));
+    .pipe(gulpIf(isDebug, gulpDebug({title: 'lint:'})))
+    .pipe(gulpJshint())
+    .pipe(gulpJshint.reporter('default', {verbose: isVerbose}))
+    .pipe(gulpJshint.reporter('fail'));
 }
