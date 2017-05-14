@@ -1,20 +1,19 @@
 'use strict';
-/* jshint node: true */
 
-var crypto = require('crypto');
-var request = require('request');
-var _ = require('lodash');
+const crypto = require('crypto');
+const request = require('request');
+const _ = require('lodash');
 
 /**
  * @module request-cache
  * @example
 ```js
-var requestCache = require('request-cache');
-var rCache = requestCache(REDIS_CLIENT);
-var cacheKey;
+const requestCache = require('request-cache');
+const rCache = requestCache(REDIS_CLIENT);
+const cacheKey;
 
 setInterval(function () {
-  var key = rCache('http://www.somethingawesome.com', function (err, resp, body) {
+  const key = rCache('http://www.somethingawesome.com', function (err, resp, body) {
     // Do something with the awesomeness
   });
 
@@ -47,14 +46,14 @@ module.exports = function requestCacheInitialization(redisClient, options) {
     refresh: 0, // seconds
     ttl: 3600, // seconds
     queryCacheKeys: [],
-    keyPrefix: undefined
+    keyPrefix: ''
   }, options || {});
 
   /**
    * Caches successful request calls for subsequent requests. If original request results in an error the response will not be cached.
    * @example
      ```js
-     var cacheKey = rCache(req_obj[, key], next);
+     const cacheKey = rCache(req_obj[, key], next);
      ```
    * @param {object|string} req_obj - A request object or URL ([more info](https://github.com/request/request#requestoptions-callback))
    * @param {string} [key] - Cache key to use in place of the generated cache key
@@ -62,41 +61,36 @@ module.exports = function requestCacheInitialization(redisClient, options) {
    * @return {string} - Generated cache key or provided key value
    */
   return function requestCache(reqObj, key, next) {
-    var hash;
+    if (arguments.length === 2) {
+      // requestCache(reqObj, next);
+      next = key;
+      key = undefined;
+    }
 
     if (_.isString(reqObj)) {
       // requestCache(URI[, key], next);
       reqObj = {uri: reqObj};
     }
 
-    if (arguments.length === 2) {
-      // requestCache(req, next);
-      next = key;
-      key = undefined;
-    }
-
-    if (!reqObj || (!reqObj.url && !reqObj.uri)) {
+    if (_.isEmpty(reqObj) || (_.isEmpty(reqObj.uri) && _.isEmpty(reqObj.url))) {
       return next ?
-        next(new TypeError('A URI or URL is required.')) :
+        process.nextTick(next, new TypeError('A URI or URL is required.')) :
         new TypeError('A URI or URL and a callback are required.');
     }
 
     if (key === undefined) {
       // Generate a key
-      hash = crypto.createHash(options.algorithm);
-      hash.update(reqObj.url || reqObj.uri);
+      let hash = crypto.createHash(options.algorithm);
 
-      if (reqObj.qs) {
-        hash.update(options.queryCacheKeys.reduce(function (str, key) {
-          if (reqObj.qs[key]) {
-            str += key + reqObj.qs[key];
-          }
+      hash.update(reqObj.uri || reqObj.url);
 
-          return str;
-        }, ''));
-      }
+      options.queryCacheKeys.forEach(function addQeuryToHash(key) {
+        if (_.has(reqObj.qs, key)) {
+          hash.update(`${key}${reqObj.qs[key]}`);
+        }
+      });
 
-      key = (options.keyPrefix || '') + hash.digest(options.encoding);
+      key = `${options.keyPrefix}${hash.digest(options.encoding)}`;
     }
 
     redisClient.get(key, function fetchObj(err, obj) {
