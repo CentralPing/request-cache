@@ -3,16 +3,18 @@
 const reqCache = require('./');
 
 describe('With request-cache', function () {
-  it('should return a function on require', function () {
-    expect(reqCache).toEqual(jasmine.any(Function));
-    expect(reqCache.name).toBe('requestCacheInitialization');
-  });
+  describe('with exports', function () {
+    it('should return a function on require', function () {
+      expect(reqCache).toEqual(jasmine.any(Function));
+      expect(reqCache.name).toBe('requestCacheInitialization');
+    });
 
-  it('should return a function on intitialization', function () {
-    const cacheObj = reqCache();
+    it('should return a function on intitialization', function () {
+      const cacheObj = reqCache();
 
-    expect(cacheObj).toEqual(jasmine.any(Function));
-    expect(cacheObj.name).toBe('requestCache');
+      expect(cacheObj).toEqual(jasmine.any(Function));
+      expect(cacheObj.name).toBe('requestCache');
+    });
   });
 
   describe('with caching function', function () {
