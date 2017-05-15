@@ -30,7 +30,7 @@ setInterval(function () {
   // Second call - cacheKey === key; cached resp and body are returned
   // Third call - cacheKey === key; cached resp and body are returned
   // ...
-  // Three-thousand-six-hundredth call - cacheKey === key; new resp and body are cached returned
+  // Three-thousand-six-hundredth call - cacheKey === key; new resp and body are cached and returned
 
   cacheKey = key;
 }, 1000);
