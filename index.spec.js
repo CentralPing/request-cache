@@ -1,8 +1,41 @@
 'use strict';
 
-const reqCache = require('./');
+const url = require('url');
+const mockery = require('mockery');
 
 describe('With request-cache', function () {
+  let reqCache;
+
+  beforeAll(function (done) {
+    mockery.enable({
+      warnOnReplace: false,
+      warnOnUnregistered: false,
+      useCleanCache: true
+    });
+
+    mockery.registerMock('request', function mockRequest(reqObj, next) {
+      const urlObj = url.parse(reqObj.uri || reqObj.url);
+
+      if (urlObj.pathname === '/error') {
+        let err = new Error('connect ECONNREFUSED 127.0.0.1:80');
+
+        return next(err);
+      }
+
+      next(null, {}, 'body');
+    });
+
+    reqCache = require('./');
+
+    done();
+  });
+
+  afterAll(function (done) {
+    mockery.disable();
+    mockery.deregisterAll();
+    done();
+  });
+
   describe('with exports', function () {
     it('should return a function on require', function () {
       expect(reqCache).toEqual(jasmine.any(Function));
@@ -17,7 +50,7 @@ describe('With request-cache', function () {
     });
   });
 
-  describe('with caching function', function () {
+  describe('with default caching options', function () {
     let redis;
     let cache;
 
@@ -36,49 +69,29 @@ describe('With request-cache', function () {
       });
     });
 
-    it('should return an error without required fields: URI and callback', function () {
-      const hashKey = cache();
+    describe('with errors', function () {
+      it('should return an error without required fields: URI and callback', function () {
+        const hashKey = cache();
 
-      expect(hashKey).not.toBe(null);
-      expect(hashKey.name).toBe('TypeError');
-      expect(hashKey.message).toBe('A URI or URL and a callback are required.');
-      expect(redis.get).not.toHaveBeenCalled();
-      expect(redis.set).not.toHaveBeenCalled();
-      expect(redis.expire).not.toHaveBeenCalled();
-    });
-
-    it('should populate callback error without required field: URI', function (done) {
-      const hashKey = cache({}, function (err, resp, body) {
-        expect(hashKey).not.toBeDefined();
+        expect(hashKey).not.toBe(null);
+        expect(hashKey.name).toBe('TypeError');
+        expect(hashKey.message).toBe('A URI or URL and a callback are required.');
         expect(redis.get).not.toHaveBeenCalled();
         expect(redis.set).not.toHaveBeenCalled();
         expect(redis.expire).not.toHaveBeenCalled();
-        expect(err).not.toBe(null);
-        expect(err.name).toBe('TypeError');
-        expect(err.message).toBe('A URI or URL is required.');
-        done();
       });
-    });
 
-    it('should return a hash immediately', function (done) {
-      const hashKey = cache('http://localhost', function (err, resp, body) {
-        expect(hashKey).toBeDefined();
-        expect(hashKey).toEqual(jasmine.any(String));
-        done();
-      });
-    });
-
-    it('should use the hashKey for lookup', function (done) {
-      const hashKey = cache('http://localhost', function (err, resp, body) {
-        expect(err).not.toBe(null);
-        expect(resp).not.toBeDefined();
-        expect(body).not.toBeDefined();
-        expect(redis.get).toHaveBeenCalled();
-        expect(redis.get.calls.argsFor(0)[0]).toBe(hashKey);
-        expect(redis.get.calls.argsFor(0)[1]).toEqual(jasmine.any(Function));
-        expect(redis.set).not.toHaveBeenCalled();
-        expect(redis.expire).not.toHaveBeenCalled();
-        done();
+      it('should populate callback error without required field: URI', function (done) {
+        const hashKey = cache({}, function (err, resp, body) {
+          expect(hashKey).not.toBeDefined();
+          expect(redis.get).not.toHaveBeenCalled();
+          expect(redis.set).not.toHaveBeenCalled();
+          expect(redis.expire).not.toHaveBeenCalled();
+          expect(err).not.toBe(null);
+          expect(err.name).toBe('TypeError');
+          expect(err.message).toBe('A URI or URL is required.');
+          done();
+        });
       });
     });
 
@@ -126,7 +139,7 @@ describe('With request-cache', function () {
       var cacheObj = {};
 
       it('should return error without caching', function (done) {
-        const hashKey = cache('http://localhost', function (err, resp, body) {
+        const hashKey = cache('http://localhost/error', function (err, resp, body) {
           expect(err).not.toBe(null);
           expect(err.name).toBe('Error');
           expect(err.message).toBe('connect ECONNREFUSED 127.0.0.1:80');
@@ -142,7 +155,7 @@ describe('With request-cache', function () {
       });
 
       it('should use the hashKey for setting and expiring cache', function (done) {
-        const hashKey = cache('http://www.google.com', function (err, resp, body) {
+        const hashKey = cache('http://localhost', function (err, resp, body) {
           expect(err).toBe(null);
           expect(resp).toBeDefined();
           expect(body).toBeDefined();
@@ -166,35 +179,35 @@ describe('With request-cache', function () {
       });
 
       it('should generate the same hashKey for retreiving cache with the same URL', function (done) {
-        const hashKey = cache('http://www.google.com', function (err, resp, body) {
+        const hashKey = cache('http://localhost', function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
           done();
         });
       });
 
       it('should generate the same hashKey for retreiving cache with the same URL as a param (URL)', function (done) {
-        const hashKey = cache({url: 'http://www.google.com'}, function (err, resp, body) {
+        const hashKey = cache({url: 'http://localhost'}, function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
           done();
         });
       });
 
       it('should generate the same hashKey for retreiving cache with the same URL as a param (URI)', function (done) {
-        const hashKey = cache({uri: 'http://www.google.com'}, function (err, resp, body) {
+        const hashKey = cache({uri: 'http://localhost'}, function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
           done();
         });
       });
 
       it('should generate a new hashKey for retreiving cache with a different URL', function (done) {
-        const hashKey = cache('https://www.google.com', function (err, resp, body) {
+        const hashKey = cache('https://localhost', function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
           done();
         });
       });
 
       it('should generate the same hashKey for retreiving cache with same URL and query params', function (done) {
-        const hashKey = cache('http://www.google.com/?q=hello', function (err, resp, body) {
+        const hashKey = cache('http://localhost/?q=hello', function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
           done();
         });
@@ -205,7 +218,7 @@ describe('With request-cache', function () {
           process.nextTick(cb, null, cacheObj.value);
         });
 
-        const hashKey = cache('http://www.google.com', function (err, resp, body) {
+        const hashKey = cache('http://localhost', function (err, resp, body) {
           expect(err).toBe(null);
           expect(resp.statusCode).toBe(cacheObj.resp.statusCode);
           expect(body).toEqual(cacheObj.body);
@@ -243,7 +256,7 @@ describe('With request-cache', function () {
       const cacheObj = {};
 
       it('should use the hashKey for setting and expiring cache', function (done) {
-        const hashKey = cache({url: 'http://www.google.com', qs: {q: 'hello', spell: 1}}, function (err, resp, body) {
+        const hashKey = cache({url: 'http://localhost', qs: {q: 'hello', spell: 1}}, function (err, resp, body) {
           expect(err).toBe(null);
           expect(resp).toBeDefined();
           expect(body).toBeDefined();
@@ -264,7 +277,7 @@ describe('With request-cache', function () {
       });
 
       it('should generate the same hashKey for retreiving cache with the same URL and key param values', function (done) {
-        const hashKey = cache({url: 'http://www.google.com', qs: {q: 'hello', spell: 1}}, function (err, resp, body) {
+        const hashKey = cache({url: 'http://localhost', qs: {q: 'hello', spell: 1}}, function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
 
           done();
@@ -272,21 +285,21 @@ describe('With request-cache', function () {
       });
 
       it('should generate the same hashKey for retreiving cache with the same URL and key param values with extra param values', function (done) {
-        const hashKey = cache({url: 'http://www.google.com', qs: {q: 'hello', spell: 1, sa: 'foo'}}, function (err, resp, body) {
+        const hashKey = cache({url: 'http://localhost', qs: {q: 'hello', spell: 1, sa: 'foo'}}, function (err, resp, body) {
           expect(hashKey).toBe(cacheObj.key);
           done();
         });
       });
 
       it('should generate a new hashKey for retreiving cache with the same URL and different key param values', function (done) {
-        const hashKey = cache({url: 'http://www.google.com', qs: {q: 'hello', spell: 0}}, function (err, resp, body) {
+        const hashKey = cache({url: 'http://localhost', qs: {q: 'hello', spell: 0}}, function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
           done();
         });
       });
 
       it('should generate a new hashKey for retreiving cache with the same URL and subset of key param values', function (done) {
-        const hashKey = cache({url: 'http://www.google.com', qs: {q: 'hello'}}, function (err, resp, body) {
+        const hashKey = cache({url: 'http://localhost', qs: {q: 'hello'}}, function (err, resp, body) {
           expect(hashKey).not.toBe(cacheObj.key);
           done();
         });
@@ -299,7 +312,7 @@ describe('With request-cache', function () {
           process.nextTick(cb, null, cacheObj.value);
         });
 
-        const hashKey = cache('http://www.google.com', function (err, resp, body) {
+        const hashKey = cache('http://localhost', function (err, resp, body) {
           expect(err).toBe(null);
           expect(resp.statusCode).toBe(cacheObj.resp.statusCode);
           expect(body).toEqual(cacheObj.body);
@@ -314,7 +327,7 @@ describe('With request-cache', function () {
       it('should not set the expiration with `ttl` set to `0`', function (done) {
         const cache = reqCache(redis, {ttl: 0});
 
-        const hashKey = cache('http://www.google.com', function (err, resp, body) {
+        const hashKey = cache('http://localhost', function (err, resp, body) {
           expect(err).toBe(null);
           expect(resp).toBeDefined();
           expect(body).toBeDefined();
@@ -329,7 +342,7 @@ describe('With request-cache', function () {
       it('should prefix the generated hashKey with `keyPrefix` set', function (done) {
         const cache = reqCache(redis, {keyPrefix: 'FOO'});
 
-        const hashKey = cache('http://www.google.com', function (err, resp, body) {
+        const hashKey = cache('http://localhost', function (err, resp, body) {
           expect(hashKey).toBeDefined();
           expect(hashKey).toEqual(jasmine.stringMatching(/^FOO/));
           done();
