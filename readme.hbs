@@ -5,10 +5,11 @@ request-cache
 [![Code Climate for CentralPing/request-cache](https://codeclimate.com/github/CentralPing/request-cache/badges/gpa.svg)](https://codeclimate.com/github/CentralPing/request-cache)
 [![Dependency Status for CentralPing/request-cache](https://david-dm.org/CentralPing/request-cache.svg)](https://david-dm.org/CentralPing/request-cache)
 [![Greenkeeper badge](https://badges.greenkeeper.io/CentralPing/request-cache.svg)](https://greenkeeper.io/)
+[![Known Vulnerabilities](https://snyk.io/test/npm/request-cache/badge.svg)](https://snyk.io/test/npm/request-cache)
 
 Simple request caching using [Redis](http://redis.io/) for [request](https://github.com/request/request).
 
-Tested with redis clients: [node_redis](https://github.com/mranney/node_redis) [ioredis](https://github.com/luin/ioredis)
+Tested with redis clients: [node_redis](https://github.com/mranney/node_redis), [ioredis](https://github.com/luin/ioredis)
 
 ## Installation
 
