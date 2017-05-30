@@ -6,7 +6,7 @@ const mockery = require('mockery');
 describe('With request-cache', function () {
   let reqCache;
 
-  beforeAll(function (done) {
+  beforeAll(function () {
     mockery.enable({
       warnOnReplace: false,
       warnOnUnregistered: false,
@@ -17,23 +17,18 @@ describe('With request-cache', function () {
       const urlObj = url.parse(reqObj.uri || reqObj.url);
 
       if (urlObj.pathname === '/error') {
-        let err = new Error('connect ECONNREFUSED 127.0.0.1:80');
-
-        return next(err);
+        return next(new Error('ERROR'));
       }
 
       next(null, {}, 'body');
     });
 
     reqCache = require('./');
-
-    done();
   });
 
-  afterAll(function (done) {
+  afterAll(function () {
     mockery.disable();
     mockery.deregisterAll();
-    done();
   });
 
   describe('with exports', function () {
@@ -142,7 +137,7 @@ describe('With request-cache', function () {
         const hashKey = cache('http://localhost/error', function (err, resp, body) {
           expect(err).not.toBe(null);
           expect(err.name).toBe('Error');
-          expect(err.message).toBe('connect ECONNREFUSED 127.0.0.1:80');
+          expect(err.message).toBe('ERROR');
           expect(resp).not.toBeDefined();
           expect(body).not.toBeDefined();
           expect(redis.get).toHaveBeenCalled();
