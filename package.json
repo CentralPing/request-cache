@@ -11,7 +11,7 @@
     "faker": "^4.1.0",
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
-    "gulp-debug": "^3.1.0",
+    "gulp-debug": "^4.0.0",
     "gulp-if": "^2.0.2",
     "gulp-jasmine": "^3.0.0",
     "gulp-jsdoc-to-markdown": "^1.1.1",
