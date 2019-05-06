@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "faker": "^4.1.0",
-    "gulp": "^3.8.11",
+    "gulp": "^4.0.2",
     "gulp-concat": "^2.5.2",
     "gulp-debug": "^4.0.0",
     "gulp-if": "^2.0.2",
