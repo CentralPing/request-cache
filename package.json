@@ -4,7 +4,7 @@
   "description": "Simple request caching using Redis for request.",
   "main": "index.js",
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.13",
     "request": "^2.81.0"
   },
   "devDependencies": {
