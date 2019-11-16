@@ -21,7 +21,7 @@
     "jscs": "^3.0.7",
     "jshint": "^2.9.4",
     "mockery": "^2.0.0",
-    "yargs": "^11.0.0"
+    "yargs": "^15.0.1"
   },
   "scripts": {
     "test": "gulp test"
