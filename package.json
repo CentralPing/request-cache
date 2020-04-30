@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "lodash": "^4.17.4",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "faker": "^4.1.0",
@@ -24,7 +25,9 @@
     "yargs": "^11.0.0"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -42,5 +45,6 @@
   "bugs": {
     "url": "https://github.com/CentralPing/request-cache/issues"
   },
-  "homepage": "https://github.com/CentralPing/request-cache"
+  "homepage": "https://github.com/CentralPing/request-cache",
+  "snyk": true
 }
